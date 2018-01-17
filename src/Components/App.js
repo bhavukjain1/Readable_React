@@ -3,22 +3,26 @@ import logo from '../logo.svg';
 import '../App.css';
 import { connect } from 'react-redux'
 import { createPost, deletePost } from '../Actions'
-import { Button, Header, Image, Modal } from 'semantic-ui-react'
 import CreatePost from './CreatePost'
+import Post from './Post'
+import { Divider } from 'semantic-ui-react'
+import { Tab } from 'semantic-ui-react'
 
 class App extends Component {
 
   render() {
     const { posts,createPost,deletePost } = this.props
+
+    var panes = [
+  { menuItem: 'All Posts', render: () => <Tab.Pane><Post /></Tab.Pane> },
+  { menuItem: 'React Posts', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> },
+  { menuItem: 'Redux Posts', render: () => <Tab.Pane>Tab 3 Content</Tab.Pane> },
+]
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <h1>Readable</h1>
+        <Tab panes={panes} />
+
         <button onClick={() => createPost({id:123,text:'Hello'})}>Continue</button>
         <CreatePost />
       </div>

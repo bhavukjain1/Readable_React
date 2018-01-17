@@ -33,7 +33,7 @@ export class CreatePost extends Component {
       							 <input placeholder='Post Title' />
     						</Form.Field>
     						<Form.Field>
-      							 <label>Post </label>
+      							 <label>Post Description</label>
       							 <TextArea placeholder='Write Something...' />
     						</Form.Field>
 
