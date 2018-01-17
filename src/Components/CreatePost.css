@@ -1,0 +1,11 @@
+.Button-Bottom {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  height:50px;
+  width:50px;
+}
+
+.Div-Margin {
+	margin-top: 10px;
+}
