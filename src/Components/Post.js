@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
-import PostDetails from './PostDetails'
 import { Button, Icon, Item, Label } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
-import { Route } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
 

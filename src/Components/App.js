@@ -5,9 +5,25 @@ import { connect } from 'react-redux'
 import CreatePost from './CreatePost'
 import Post from './Post'
 import { Tab } from 'semantic-ui-react'
-import { Route, Link } from 'react-router-dom'
+import { Route } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 class App extends Component {
+
+   post = (data) => {
+
+      var postId = data.match.params.postId
+      var post = this.props.posts.filter(post => post.id === postId)[0]
+
+      return (
+          <div className='App'>
+            <PostDetails
+                post={{ author: post.author, title: post.title, description: post.description, category: 'React'}}
+            />
+          </div>
+       )
+}
+
 
   render() {
     const { posts } = this.props
@@ -18,6 +34,7 @@ class App extends Component {
   { menuItem: 'Redux Posts', render: () => <Tab.Pane>Tab 3 Content</Tab.Pane> },
 ]
     return (
+      <Router>
       <div className="App">
         <Route exact path='/' render={() => (
              <div>
@@ -28,21 +45,11 @@ class App extends Component {
           )}
         />
 
-        <Route path="/post/:postId" component={Here}/>
+        <Route path="/post/:postId" component={this.post}/>
       </div>
+      </Router>
     );
   }
-}
-
-
-const Here = (props) => {
-
-  console.log(props)
-  return <div className='App'>
-            <PostDetails
-                post={{ author: 'dsvsss', title: 'dsfdsfsfdf', description: 'dsfdsfsfdsf', category: 'React'}}
-             />
-        </div>
 }
 
 
