@@ -1,33 +1,48 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
 import '../App.css';
+import PostDetails from './PostDetails'
 import { connect } from 'react-redux'
-import { createPost, deletePost } from '../Actions'
 import CreatePost from './CreatePost'
 import Post from './Post'
-import { Divider } from 'semantic-ui-react'
 import { Tab } from 'semantic-ui-react'
+import { Route, Link } from 'react-router-dom'
 
 class App extends Component {
 
   render() {
-    const { posts,createPost,deletePost } = this.props
+    const { posts } = this.props
 
     var panes = [
-  { menuItem: 'All Posts', render: () => <Tab.Pane><Post /></Tab.Pane> },
+  { menuItem: 'All Posts', render: () => <Tab.Pane><Post posts={posts}/></Tab.Pane> },
   { menuItem: 'React Posts', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> },
   { menuItem: 'Redux Posts', render: () => <Tab.Pane>Tab 3 Content</Tab.Pane> },
 ]
     return (
       <div className="App">
-        <h1>Readable</h1>
-        <Tab panes={panes} />
+        <Route exact path='/' render={() => (
+             <div>
+                <h1>Readable</h1>
+                <Tab panes={panes} />
+                <CreatePost />
+             </div>
+          )}
+        />
 
-        <button onClick={() => createPost({id:123,text:'Hello'})}>Continue</button>
-        <CreatePost />
+        <Route path="/post/:postId" component={Here}/>
       </div>
     );
   }
+}
+
+
+const Here = (props) => {
+
+  console.log(props)
+  return <div className='App'>
+            <PostDetails
+                post={{ author: 'dsvsss', title: 'dsfdsfsfdf', description: 'dsfdsfsfdsf', category: 'React'}}
+             />
+        </div>
 }
 
 
@@ -38,14 +53,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps (dispatch) {
-  return {
-    createPost: (data) => dispatch(createPost(data)),
-    deletePost: (data) => dispatch(deletePost(data))
-  }
-}
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(App)

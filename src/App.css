@@ -26,3 +26,26 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.Button-Bottom {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  height:50px;
+  width:50px;
+}
+
+.Div-Margin {
+  margin-top: 10px;
+}
+
+.Post-Content {
+  text-align: left;
+}
+
+.Post-Detail {
+  text-align: left;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;
+}

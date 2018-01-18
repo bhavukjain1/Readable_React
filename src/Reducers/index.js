@@ -6,15 +6,11 @@ import {
 } from '../Actions'
 
 
-const initialState = {
-
-	posts:[]
-}
 
 function posts(state=[], action) {
 	switch(action.type) {
 		case CREATE_POST:
-			var post = {id:action.id, text:action.text}
+			var post = {id:action.id, title:action.title, author:action.author, description:action.description, category:action.category}
 			return [post,...state]
 		case DELETE_POST:
 			return state.filter(post => post.id !== action.id)

@@ -1,11 +1,14 @@
 export const CREATE_POST = 'CREATE_POST'
 export const DELETE_POST = 'DELETE_POST'
 
-export function createPost({id,text}) {
+export function createPost({id,title,description,author,category}) {
 	return {
 		type: CREATE_POST,
 		id,
-		text
+		title,
+		description,
+		author,
+		category
 	}
 }
 
