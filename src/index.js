@@ -7,6 +7,7 @@ import { createStore } from 'redux'
 import reducer from './Reducers'
 import { Provider } from 'react-redux'
 import 'semantic-ui-css/semantic.min.css'
+import 'font-awesome/css/font-awesome.min.css';
 import { BrowserRouter } from 'react-router-dom'
 
 const store = createStore(reducer,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())

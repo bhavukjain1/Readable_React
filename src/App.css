@@ -49,3 +49,16 @@
   margin-right: 20px;
   margin-top: 20px;
 }
+
+.Post-Inline {
+  display:inline-block;
+}
+
+.Post-Vote {
+  display:inline-block;
+  width:50px;
+}
+
+#Post-Vote * {
+  margin:5px;
+}

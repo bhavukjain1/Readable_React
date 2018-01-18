@@ -17,15 +17,18 @@ export class CreatePost extends Component {
   }
 
   handleChangeDropdown = (e,data) => {
+
+    console.log(data)
   	this.setState({ category: data.value })
   }
 
 
 	handleSubmit = () => {
   	  const { title, description, author, category } = this.state
-  	  const { createPostt } = this.props
+  	  const { createPostt, posts } = this.props
 
-	    createPostt({id:'1',title:title,description:description,author:author,category:category})
+      let postId = posts.length + 1
+	    createPostt({id:postId,title:title,description:description,author:author,category:category})
 		this.closeModal()
  	 }
 
@@ -35,7 +38,7 @@ export class CreatePost extends Component {
  	 }
 
  	 closeModal = () => {
- 	 	this.setState({open:false})
+ 	 	this.setState({open:false, category: 'React'})
  	 }
 
 
@@ -61,7 +64,7 @@ export class CreatePost extends Component {
 						<Form className="Div-Margin" onSubmit={this.handleSubmit}>
 							 <Form.Field>
      							 <label>Category</label>
-		   		    			 <Dropdown placeholder='Select a Category' fluid selection options={friendOptions} onChange={this.handleChangeDropdown} defaultValue='React'/>
+		   		    			 <Dropdown placeholder='Select a Category' fluid selection options={friendOptions} onChange={this.handleChangeDropdown} defaultValue={friendOptions[0].value}/>
    							 </Form.Field>
    							 <Form.Field>
       							 <label>Author</label>
@@ -88,6 +91,12 @@ export class CreatePost extends Component {
 }
 
 
+function mapStateToProps(state) {
+  return {
+    posts: state.posts
+  }
+}
+
 
 function mapDispatchToProps (dispatch) {
   return {
@@ -96,6 +105,6 @@ function mapDispatchToProps (dispatch) {
 }
 
 export default connect(
-	null,
+	mapStateToProps,
   mapDispatchToProps
 )(CreatePost)

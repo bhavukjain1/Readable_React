@@ -6,14 +6,14 @@ import CreatePost from './CreatePost'
 import Post from './Post'
 import { Tab } from 'semantic-ui-react'
 import { Route } from 'react-router-dom'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 class App extends Component {
 
    post = (data) => {
 
       var postId = data.match.params.postId
-      var post = this.props.posts.filter(post => post.id === postId)[0]
+      var post = this.props.posts.filter(post => post.id == postId)[0]
 
       return (
           <div className='App'>
@@ -22,19 +22,18 @@ class App extends Component {
             />
           </div>
        )
-}
+   }
 
 
   render() {
     const { posts } = this.props
 
     var panes = [
-  { menuItem: 'All Posts', render: () => <Tab.Pane><Post posts={posts}/></Tab.Pane> },
-  { menuItem: 'React Posts', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> },
-  { menuItem: 'Redux Posts', render: () => <Tab.Pane>Tab 3 Content</Tab.Pane> },
-]
+              { menuItem: 'All Posts', render: () => <Tab.Pane><Post posts={posts}/></Tab.Pane> },
+              { menuItem: 'React Posts', render: () => <Tab.Pane><Post posts={posts.filter(post => post.category === 'React')}/></Tab.Pane> },
+              { menuItem: 'Redux Posts', render: () => <Tab.Pane><Post posts={posts.filter(post => post.category === 'Redux')}/></Tab.Pane> },
+            ]
     return (
-      <Router>
       <div className="App">
         <Route exact path='/' render={() => (
              <div>
@@ -47,7 +46,6 @@ class App extends Component {
 
         <Route path="/post/:postId" component={this.post}/>
       </div>
-      </Router>
     );
   }
 }
@@ -61,6 +59,6 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps
-)(App)
+)(App))

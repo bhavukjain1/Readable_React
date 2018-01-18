@@ -3,6 +3,7 @@ import '../App.css';
 import { Button, Icon, Item, Label } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import PostVote from './PostVote'
 
 
 class Post extends Component {
@@ -27,7 +28,10 @@ class Post extends Component {
           <Item.Group divided>
 
           {posts.map(post => (
+
+
             <Item key={post.id}>
+                  <PostVote />
                   <Item.Content>
                   <Item.Header as='a'>{post.title}</Item.Header>
                   <Item.Meta>
