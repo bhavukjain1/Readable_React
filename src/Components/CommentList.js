@@ -1,25 +1,70 @@
 import React, { Component } from 'react';
 import { Button, Comment, Form, Header } from 'semantic-ui-react'
+import * as API from '../api'
+import {CommentVote} from './CommentVote'
 
 class CommentList extends Component {
+
+
+  state = {
+    comments:[]
+  }
+
+  componentDidMount() {
+
+      API.getComments(this.props.post.id).then(comments => {
+          this.setState({
+            comments:comments
+          })
+      })
+  }
+
+  updateComment = (comment) => {
+
+      var commentIndex = this.state.comments.map(x => x.id).indexOf(comment.id)
+
+      var newComments = this.state.comments
+      newComments[commentIndex] = comment
+      this.setState({
+            comments: newComments
+      })
+  }
+
 	render() {
+
+    const {post} = this.props
+    const {comments} = this.state
+
+    console.log(comments)
 		return (
 			<div>
 				<Comment.Group>
-   					 <Header as='h3' dividing>Comments</Header>
+   					 <Header as='h3' dividing>Comments ({post.commentCount})</Header>
 
-   					 <Comment>
-      					<Comment.Content>
-       						 <Comment.Author as='a'>Matt</Comment.Author>
-       						 <Comment.Metadata>
-        						  <div>Today at 5:42PM</div>
-       						 </Comment.Metadata>
-       						 <Comment.Text>How artistic!</Comment.Text>
-      						 <Comment.Actions>
-         						 <Comment.Action>Reply</Comment.Action>
-        					 </Comment.Actions>
-     					</Comment.Content>
-   					 </Comment>
+            {comments.map(comment => (
+
+                  <Comment key={comment.id}>
+                  <div id='row1'>
+                    <div id="column1">
+                      <CommentVote comment={comment} updateComment={this.updateComment}/>
+                    </div>
+                    <div id="column1">
+                        <Comment.Content>
+                           <Comment.Author as='a'>{comment.author}</Comment.Author>
+                           <Comment.Metadata>
+                              <div>{comment.timestamp}</div>
+                           </Comment.Metadata>
+                           <Comment.Text>{comment.body}</Comment.Text>
+                           <Comment.Actions>
+                             <Comment.Action>Delete</Comment.Action>
+                           </Comment.Actions>
+                      </Comment.Content>
+                   </div>
+                  </div>
+                 </Comment>
+
+              ))}
+
 
     				<Form reply>
       					<Form.TextArea />

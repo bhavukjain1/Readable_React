@@ -25,7 +25,7 @@ class PostDetails extends Component {
                     </Item>
                 </Item.Group>
 
-				<CommentList />
+				<CommentList post={post}/>
 			</div>
 		);
 	}

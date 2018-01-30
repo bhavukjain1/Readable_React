@@ -36,8 +36,26 @@ export const createPost = (post) =>
     .then(data => data)
 
 
-    export const updateVote = (postid,type) =>
+export const updateVote = (postid,type) =>
   fetch(`${api}/posts/${postid}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({option:type})
+  }).then(res => res.json())
+    .then(data => data)
+
+
+export const getComments = (id) =>
+  fetch(`${api}/posts/${id}/comments`, { headers })
+    .then(res => res.json())
+    .then(data => data)
+
+
+export const updateVoteComment = (commentId,type) =>
+  fetch(`${api}/comments/${commentId}`, {
     method: 'POST',
     headers: {
       ...headers,

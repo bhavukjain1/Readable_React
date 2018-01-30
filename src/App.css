@@ -63,3 +63,24 @@
 #Post-Vote * {
   margin:5px;
 }
+
+
+
+#row1{
+    display:flex;
+    flex-direction:row;
+justify-content: left;
+}
+
+#column1{
+    display:flex;
+    flex-direction:column;
+    justify-content: space-between;
+
+}
+
+
+#column2{
+    display:flex;
+    flex-direction:column;
+}
