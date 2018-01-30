@@ -1,18 +1,47 @@
 import React, { Component } from 'react';
 import '../App.css';
+import * as API from '../api'
+import { connect } from 'react-redux'
+import { Route } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+import { updatePost } from '../Actions'
 
 class PostVote extends Component {
+
+	onButtonAction(vote) {
+		console.log(this.props.post.id)
+		API.updateVote(this.props.post.id,vote).then(post => {
+			this.props.updatePost(post)
+		})
+	}
+
 	render() {
+
+		const {post} = this.props
 		return (
 			<div className='Post-Vote' id='Post-Vote'>
-				<button className='fa fa-arrow-up'></button>
-				<label>123</label>
-				<button className='fa fa-arrow-down'></button>
+				<button className='fa fa-arrow-up' onClick={() => this.onButtonAction('upVote')}></button>
+				<label>{post.voteScore}</label>
+				<button className='fa fa-arrow-down' onClick={() => this.onButtonAction('downVote')}></button>
 			</div>
 		);
 	}
 }
 
-export default PostVote
+
+
+
+function mapDispatchToProps (dispatch) {
+  return {
+    updatePost: (data) => dispatch(updatePost(data))
+      }
+}
+
+
+
+export default connect(
+	null,
+  	mapDispatchToProps
+)(PostVote)
 
 
