@@ -15,7 +15,7 @@ class CommentList extends Component {
 
       API.getComments(this.props.post.id).then(comments => {
           this.setState({
-            comments:comments
+            comments:comments.filter(comment => comment.deleted === false)
           })
       })
   }
@@ -29,6 +29,17 @@ class CommentList extends Component {
       this.setState({
             comments: newComments
       })
+  }
+
+  deleteComment = (comment) => {
+    API.deleteComment(comment.id).then(() => {
+
+        comment.deleted = true
+        this.setState({
+          comments:this.state.comments.filter(comment => comment.deleted === false)
+        })
+
+    })
   }
 
   handleChange = (e) => {
@@ -56,12 +67,12 @@ class CommentList extends Component {
 	render() {
 
     const {post} = this.props
-    const {comments} = this.state
+    const {comments,createCommentText} = this.state
 
 		return (
 			<div>
 				<Comment.Group>
-   					 <Header as='h3' dividing>Comments ({post.commentCount})</Header>
+   					 <Header as='h3' dividing>Comments ({comments.length})</Header>
 
             {comments.map(comment => (
 
@@ -79,7 +90,7 @@ class CommentList extends Component {
                            <Comment.Text>{comment.body}</Comment.Text>
                            <Comment.Actions>
                            <Comment.Action>Edit</Comment.Action>
-                             <Comment.Action>Delete</Comment.Action>
+                             <Comment.Action onClick={() => this.deleteComment(comment)}>Delete</Comment.Action>
                            </Comment.Actions>
                       </Comment.Content>
                    </div>
@@ -90,7 +101,7 @@ class CommentList extends Component {
 
 
     				<Form reply>
-      					<Form.TextArea required onChange={this.handleChange}/>
+      					<Form.TextArea required onChange={this.handleChange} value={createCommentText}/>
     					<Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={this.submitComment}/>
    					</Form>
   				</Comment.Group>

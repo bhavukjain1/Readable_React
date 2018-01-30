@@ -80,6 +80,18 @@ export const createComment = (comment) =>
 
 
 
+export const deleteComment = (commentId) =>
+  fetch(`${api}/comments/${commentId}`, {
+    method: 'DELETE',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    }
+  }).then(res => res.json())
+    .then(data => data)
+
+
+
 
 // export const getAllPosts = () =>
 //   fetch(`${api}/books/${bookId}`, { headers })
