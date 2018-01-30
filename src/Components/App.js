@@ -7,18 +7,41 @@ import Post from './Post'
 import { Tab } from 'semantic-ui-react'
 import { Route } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
+import * as API from '../api'
+import { updateCategories, createPost } from '../Actions'
 
 class App extends Component {
+
+
+  componentDidMount() {
+
+    const {updateCategories,updatePosts} = this.props
+     API.getCategories().then(categories => {
+
+          for (var i = 0; i < categories.length; i++) {
+            updateCategories(categories[i])
+          }
+     })
+
+     API.getPosts().then(posts => {
+
+          for (var i = 0; i < posts.length; i++) {
+            updatePosts(posts[i])
+          }
+     })
+
+  }
+
+
 
    post = (data) => {
 
       var postId = data.match.params.postId
-      var post = this.props.posts.filter(post => post.id == postId)[0]
-
+      var post = this.props.posts.filter(post => post.id === postId)[0]
       return (
           <div className='App'>
             <PostDetails
-                post={{ author: post.author, title: post.title, description: post.description, category: 'React'}}
+                post={post}
             />
           </div>
        )
@@ -26,15 +49,24 @@ class App extends Component {
 
 
   render() {
-    const { posts } = this.props
+    const { posts, categories } = this.props
+    var panes = []
 
-    var panes = [
-              { menuItem: 'All Posts', render: () => <Tab.Pane><Post posts={posts}/></Tab.Pane> },
-              { menuItem: 'React Posts', render: () => <Tab.Pane><Post posts={posts.filter(post => post.category === 'React')}/></Tab.Pane> },
-              { menuItem: 'Redux Posts', render: () => <Tab.Pane><Post posts={posts.filter(post => post.category === 'Redux')}/></Tab.Pane> },
-            ]
+    var newItem = { menuItem: 'All', render: () => <Tab.Pane><Post posts={posts}/></Tab.Pane> }
+    panes.push(newItem)
+
+    for (var i = 0; i < categories.length; i++) {
+
+      let filteredPosts = posts.filter(post => post.category === categories[i].name)
+      let pane = { menuItem: categories[i].name, render: () => <Tab.Pane><Post posts={filteredPosts}/></Tab.Pane> }
+      panes.push(pane)
+    }
+
     return (
       <div className="App">
+
+      {categories.length > 0 &&
+
         <Route exact path='/' render={() => (
              <div>
                 <h1>Readable</h1>
@@ -43,22 +75,34 @@ class App extends Component {
              </div>
           )}
         />
+      }
 
         <Route path="/post/:postId" component={this.post}/>
+
       </div>
     );
   }
 }
 
 
+
 function mapStateToProps(state) {
-  console.log(state)
   return {
-    posts: state.posts
+    posts: state.posts,
+    categories: state.categories
   }
 }
 
 
+function mapDispatchToProps (dispatch) {
+  return {
+    updateCategories: (data) => dispatch(updateCategories(data)),
+    updatePosts: (data) => dispatch(createPost(data))
+      }
+}
+
+
 export default withRouter(connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(App))
