@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { connect } from 'react-redux'
-import { createPost } from '../Actions'
+import { createPost, updatePost } from '../Actions'
 import { Modal, Button } from 'semantic-ui-react'
 import { Dropdown } from 'semantic-ui-react'
 import { Form, TextArea } from 'semantic-ui-react'
@@ -10,7 +10,8 @@ import * as API from '../api'
 
 export class CreatePost extends Component {
 
-  state = { author: '', title: '', description: '', category: this.props.categories[0].name, open: false }
+  state = { author: '', title: '', description: '', category: this.props.categories[0].name, open: this.props.isModalOpen , isFirstTime:true}
+
 
   handleChange = (e) => {
 
@@ -28,14 +29,23 @@ export class CreatePost extends Component {
   	  const { title, description, author, category } = this.state
   	  const { createPostt } = this.props
 
-      let postId = makeid()
+      if (this.props.isModalOpen) {
 
-      let newPost = {id:postId,title:title,body:description,author:author,category:category, timestamp:Date.now()}
+        let post = {title:title,body:description}
+        API.updatePost(this.props.currentPost.id,post).then(post => {
+            this.props.updatePost(post)
+            this.closeModal()
+        })
 
-    API.createPost(newPost).then(post => {
-      createPostt(post)
-      this.closeModal()
-    })
+      }else {
+
+        let postId = makeid()
+        let newPost = {id:postId,title:title,body:description,author:author,category:category, timestamp:Date.now()}
+        API.createPost(newPost).then(post => {
+          createPostt(post)
+          this.closeModal()
+        })
+      }
  	 }
 
  	 openModal = () => {
@@ -44,15 +54,17 @@ export class CreatePost extends Component {
  	 }
 
  	 closeModal = () => {
- 	 	this.setState({open:false, category: this.props.categories[0].name})
+    this.props.closeModal()
+ 	 	this.setState({open:false, category: this.props.categories[0].name,
+      author:'',title:'',description:'', isFirstTime:true})
  	 }
 
 
 	render() {
 
-
-  		const { open } = this.state
-      const {categories} = this.props
+      console.log(this.props.isModalOpen)
+  		const { open, title, description, author, category, isFirstTime } = this.state
+      const {categories, isModalOpen} = this.props
 
       var options = []
 
@@ -61,9 +73,35 @@ export class CreatePost extends Component {
         options.push(option)
       }
 
+      var shouldOpenModal = false
+      if (this.props.isModalOpen) {
+        shouldOpenModal = true
+      }else {
+        shouldOpenModal = open
+      }
+
+
+      var cat = category == null ? options[0].value:category
+      var auth = author
+      var postTitle = title
+      var postDescription = description
+
+      if (this.props.currentPost != null && isFirstTime) {
+          this.setState({
+            category: this.props.currentPost.category,
+            author: this.props.currentPost.author,
+            title: this.props.currentPost.title,
+            description: this.props.currentPost.body,
+            isFirstTime:false
+          })
+
+      }
+
+    var submitTitle = this.props.isModalOpen ? 'Update':'Submit'
+
 		return (
 			<div>
-			<Modal trigger={<Button onClick={this.openModal} className="Button-Bottom" circular={true} secondary>+</Button>} open={open}>
+			<Modal trigger={<Button onClick={this.openModal} className="Button-Bottom" circular={true} secondary>+</Button>} open={shouldOpenModal}>
 				<Modal.Header>Create a Post</Modal.Header>
 				<Modal.Content>
 		 		  <Modal.Description>
@@ -71,21 +109,21 @@ export class CreatePost extends Component {
 						<Form className="Div-Margin" onSubmit={this.handleSubmit}>
 							 <Form.Field>
      							 <label>Category</label>
-		   		    			 <Dropdown placeholder='Select a Category' fluid selection options={options} onChange={this.handleChangeDropdown} defaultValue={options[0].value}/>
+		   		    			 <Dropdown placeholder='Select a Category' fluid selection options={options} onChange={this.handleChangeDropdown} defaultValue={cat}/>
    							 </Form.Field>
    							 <Form.Field>
       							 <label>Author</label>
-     							 <input placeholder='Author' name='author' onChange={this.handleChange} required/>
+     							 <input placeholder='Author' name='author' onChange={this.handleChange} value={auth} required/>
    							 </Form.Field>
    							 <Form.Field>
       							 <label>Post Title</label>
-      							 <input placeholder='Post Title' name="title" onChange={this.handleChange} required/>
+      							 <input placeholder='Post Title' name="title" onChange={this.handleChange} value={postTitle} required/>
     						</Form.Field>
     						<Form.Field>
       							 <label>Post Description</label>
-      							 <TextArea placeholder='Write Something...' name="description" onChange={this.handleChange} required/>
+      							 <TextArea placeholder='Write Something...' name="description" onChange={this.handleChange} value={postDescription} required/>
     						</Form.Field>
-    						<Button type='submit' primary>Submit</Button>
+    						<Button type='submit' primary>{submitTitle}</Button>
     						<Button onClick={this.closeModal} secondary>Close</Button>
   						</Form>
 					</div>
@@ -106,7 +144,7 @@ function makeid() {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
       return text;
-    }
+}
 
 
 function mapStateToProps(state) {
@@ -118,7 +156,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    createPostt: (data) => dispatch(createPost(data))
+    createPostt: (data) => dispatch(createPost(data)),
+    updatePost: (data) => dispatch(updatePost(data))
       }
 }
 

@@ -4,6 +4,10 @@ import { Button, Icon, Item, Label } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import PostVote from './PostVote'
+import * as API from '../api'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { deletePost } from '../Actions'
 
 
 class Post extends Component {
@@ -13,9 +17,19 @@ class Post extends Component {
    	}
 
 
-  postDetailsButton = (e) => {
+
+  deletePost = (post) => {
 
 
+    API.deletePost(post.id).then(post => {
+        this.props.deletePost(post)
+    })
+
+  }
+
+  editPost = (post) => {
+
+    this.props.postEditAction(post)
   }
 
 	render() {
@@ -43,7 +57,11 @@ class Post extends Component {
                            <Icon name='right chevron' />
                          </Button>
                       </Link>
+                      <Button floated='right' onClick={() => this.editPost(post)}>Edit</Button>
+                      <Button floated='right' onClick={() => this.deletePost(post)}>Delete</Button>
+
                       <Label>{post.category}</Label>
+
                   </Item.Extra>
                   </Item.Content>
               </Item>
@@ -55,4 +73,13 @@ class Post extends Component {
 	}
 }
 
-export default Post
+function mapDispatchToProps (dispatch) {
+  return {
+    deletePost: (data) => dispatch(deletePost(data))
+      }
+}
+
+export default withRouter(connect(
+    null,
+    mapDispatchToProps
+  )(Post))

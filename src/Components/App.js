@@ -13,6 +13,11 @@ import { updateCategories, createPost } from '../Actions'
 class App extends Component {
 
 
+  state = {
+    isModalOpen:false,
+    post:null
+  }
+
   componentDidMount() {
 
     const {updateCategories,updatePosts} = this.props
@@ -33,7 +38,6 @@ class App extends Component {
   }
 
 
-
    post = (data) => {
 
       var postId = data.match.params.postId
@@ -48,17 +52,33 @@ class App extends Component {
    }
 
 
+   postEditAction = (post) => {
+
+      this.setState({
+        isModalOpen:true,
+        post:post
+      })
+   }
+
+   closeModal = () => {
+      this.setState({
+        isModalOpen:false,
+        post:null
+      })
+   }
+
+
   render() {
     const { posts, categories } = this.props
     var panes = []
 
-    var newItem = { menuItem: 'All', render: () => <Tab.Pane><Post posts={posts}/></Tab.Pane> }
+    var newItem = { menuItem: 'All', render: () => <Tab.Pane><Post posts={posts} isModelOpen={this.state.isModalOpen} postEditAction={this.postEditAction}/></Tab.Pane> }
     panes.push(newItem)
 
     for (var i = 0; i < categories.length; i++) {
 
       let filteredPosts = posts.filter(post => post.category === categories[i].name)
-      let pane = { menuItem: categories[i].name, render: () => <Tab.Pane><Post posts={filteredPosts}/></Tab.Pane> }
+      let pane = { menuItem: categories[i].name, render: () => <Tab.Pane><Post posts={filteredPosts} isModelOpen={this.state.isModalOpen} postEditAction={this.postEditAction}/></Tab.Pane> }
       panes.push(pane)
     }
 
@@ -71,7 +91,7 @@ class App extends Component {
              <div>
                 <h1>Readable</h1>
                 <Tab panes={panes} />
-                <CreatePost />
+                <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={this.state.post}/>
              </div>
           )}
         />

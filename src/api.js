@@ -91,6 +91,29 @@ export const deleteComment = (commentId) =>
     .then(data => data)
 
 
+export const deletePost = (postId) =>
+  fetch(`${api}/posts/${postId}`, {
+    method: 'DELETE',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    }
+  }).then(res => res.json())
+    .then(data => data)
+
+
+export const updatePost = (postId,post) =>
+  fetch(`${api}/posts/${postId}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(post)
+  }).then(res => res.json())
+    .then(data => data)
+
+
 
 
 // export const getAllPosts = () =>
