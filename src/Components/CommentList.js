@@ -52,10 +52,11 @@ class CommentList extends Component {
                         <Comment.Content>
                            <Comment.Author as='a'>{comment.author}</Comment.Author>
                            <Comment.Metadata>
-                              <div>{comment.timestamp}</div>
+                              <div>{getDate(comment.timestamp)}</div>
                            </Comment.Metadata>
                            <Comment.Text>{comment.body}</Comment.Text>
                            <Comment.Actions>
+                           <Comment.Action>Edit</Comment.Action>
                              <Comment.Action>Delete</Comment.Action>
                            </Comment.Actions>
                       </Comment.Content>
@@ -74,6 +75,13 @@ class CommentList extends Component {
 			</div>
 		);
 	}
+}
+
+function getDate(timestamp) {
+
+  var d = new Date(timestamp)
+  var readableDate = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear()
+  return readableDate
 }
 
 export default CommentList
