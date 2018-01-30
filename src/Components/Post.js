@@ -21,7 +21,6 @@ class Post extends Component {
 	render() {
 
 		const {posts} = this.props
-		console.log(posts)
 		return (
 			<div className="Post-Content">
 
@@ -31,7 +30,7 @@ class Post extends Component {
 
 
             <Item key={post.id}>
-                  <PostVote />
+                  <PostVote post={post}/>
                   <Item.Content>
                   <Item.Header as='a'>{post.title}</Item.Header>
                   <Item.Meta>
