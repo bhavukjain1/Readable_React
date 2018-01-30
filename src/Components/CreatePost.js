@@ -5,11 +5,12 @@ import { createPost } from '../Actions'
 import { Modal, Button } from 'semantic-ui-react'
 import { Dropdown } from 'semantic-ui-react'
 import { Form, TextArea } from 'semantic-ui-react'
+import * as API from '../api'
 
 
 export class CreatePost extends Component {
 
-  state = { author: '', title: '', description: '', category: 'React', open: false }
+  state = { author: '', title: '', description: '', category: this.props.categories[0].name, open: false }
 
   handleChange = (e) => {
 
@@ -25,34 +26,40 @@ export class CreatePost extends Component {
 
 	handleSubmit = () => {
   	  const { title, description, author, category } = this.state
-  	  const { createPostt, posts } = this.props
+  	  const { createPostt } = this.props
 
-      let postId = posts.length + 1
-	    createPostt({id:postId,title:title,description:description,author:author,category:category})
-		this.closeModal()
+      let postId = makeid()
+
+      let newPost = {id:postId,title:title,body:description,author:author,category:category, timestamp:Date.now()}
+
+    API.createPost(newPost).then(post => {
+      createPostt(post)
+      this.closeModal()
+    })
  	 }
 
  	 openModal = () => {
 
- 	 	this.setState({open:true})
+ 	 	this.setState({open:true, category: this.props.categories[0].name})
  	 }
 
  	 closeModal = () => {
- 	 	this.setState({open:false, category: 'React'})
+ 	 	this.setState({open:false, category: this.props.categories[0].name})
  	 }
 
 
 	render() {
 
-		var friendOptions = [{
-    						text: 'React',
-    						value: 'React'
-  							},{
-    						text: 'Redux',
-    						value: 'Redux'
-  							}]
 
   		const { open } = this.state
+      const {categories} = this.props
+
+      var options = []
+
+      for (var i = 0; i < categories.length; i++) {
+        let option = {text:categories[i].name,value:categories[i].name}
+        options.push(option)
+      }
 
 		return (
 			<div>
@@ -64,7 +71,7 @@ export class CreatePost extends Component {
 						<Form className="Div-Margin" onSubmit={this.handleSubmit}>
 							 <Form.Field>
      							 <label>Category</label>
-		   		    			 <Dropdown placeholder='Select a Category' fluid selection options={friendOptions} onChange={this.handleChangeDropdown} defaultValue={friendOptions[0].value}/>
+		   		    			 <Dropdown placeholder='Select a Category' fluid selection options={options} onChange={this.handleChangeDropdown} defaultValue={options[0].value}/>
    							 </Form.Field>
    							 <Form.Field>
       							 <label>Author</label>
@@ -91,9 +98,20 @@ export class CreatePost extends Component {
 }
 
 
+function makeid() {
+      var text = "";
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+      for (var i = 0; i < 10; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+      return text;
+    }
+
+
 function mapStateToProps(state) {
   return {
-    posts: state.posts
+    categories: state.categories
   }
 }
 
