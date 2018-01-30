@@ -2,23 +2,42 @@ import { combineReducers } from 'redux'
 
 import {
 	CREATE_POST,
-	DELETE_POST
+	DELETE_POST,
+	UPDATE_CATEGORIES,
+	UPDATE_POST
 } from '../Actions'
 
 
 
 function posts(state=[], action) {
+
 	switch(action.type) {
 		case CREATE_POST:
-			var post = {id:action.id, title:action.title, author:action.author, description:action.description, category:action.category}
-			return [post,...state]
+			return [action,...state]
 		case DELETE_POST:
-			return state.filter(post => post.id !== action.id)
+			return state.filter(post => post.id != action.id)
+		case UPDATE_POST:
+			var postIndex = state.map(x => x.id).indexOf(action.id)
+			var newState  = [...state]
+			newState[postIndex] = action
+			return newState
+
+		default:
+			return state
+	}
+}
+
+
+function categories(state=[], action) {
+	switch(action.type) {
+		case UPDATE_CATEGORIES:
+			return [action,...state]
 		default:
 			return state
 	}
 }
 
 export default combineReducers({
-	posts
+	posts,
+	categories
 })
