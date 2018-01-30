@@ -7,7 +7,8 @@ class CommentList extends Component {
 
 
   state = {
-    comments:[]
+    comments:[],
+    createCommentText:''
   }
 
   componentDidMount() {
@@ -30,12 +31,33 @@ class CommentList extends Component {
       })
   }
 
+  handleChange = (e) => {
+
+    this.setState({
+      createCommentText:e.target.value
+    })
+  }
+
+  submitComment = () => {
+
+      const {createCommentText} = this.state
+      console.log(createCommentText)
+      var comment = {id:makeid(),timestamp:Date.now(),body:this.state.createCommentText,author:'Bhavuk',parentId:this.props.post.id}
+      API.createComment(comment).then(comment => {
+        var newComments = this.state.comments
+        newComments.push(comment)
+        this.setState({
+          comments:newComments,
+          createCommentText:""
+        })
+      })
+  }
+
 	render() {
 
     const {post} = this.props
     const {comments} = this.state
 
-    console.log(comments)
 		return (
 			<div>
 				<Comment.Group>
@@ -68,13 +90,24 @@ class CommentList extends Component {
 
 
     				<Form reply>
-      					<Form.TextArea />
-    					<Button content='Add Reply' labelPosition='left' icon='edit' primary />
+      					<Form.TextArea required onChange={this.handleChange}/>
+    					<Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={this.submitComment}/>
    					</Form>
   				</Comment.Group>
 			</div>
 		);
 	}
+}
+
+
+function makeid() {
+      var text = "";
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+      for (var i = 0; i < 10; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+      return text;
 }
 
 function getDate(timestamp) {
