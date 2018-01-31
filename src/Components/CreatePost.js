@@ -13,6 +13,19 @@ export class CreatePost extends Component {
   state = { author: '', title: '', description: '', category: this.props.categories[0].name, open: this.props.isModalOpen , isFirstTime:true}
 
 
+  componentWillReceiveProps(newProps) {
+
+      if (newProps.currentPost != null) {
+           this.setState({
+                category: newProps.currentPost.category,
+                author: newProps.currentPost.author,
+                title: newProps.currentPost.title,
+                description: newProps.currentPost.body,
+                open:true
+            })
+      }
+  }
+
   handleChange = (e) => {
 
   	this.setState({ [e.target.name]: e.target.value })
@@ -73,35 +86,13 @@ export class CreatePost extends Component {
         options.push(option)
       }
 
-      var shouldOpenModal = false
-      if (this.props.isModalOpen) {
-        shouldOpenModal = true
-      }else {
-        shouldOpenModal = open
-      }
 
-
-      var cat = category == null ? options[0].value:category
-      var auth = author
-      var postTitle = title
-      var postDescription = description
-
-      if (this.props.currentPost != null && isFirstTime) {
-          this.setState({
-            category: this.props.currentPost.category,
-            author: this.props.currentPost.author,
-            title: this.props.currentPost.title,
-            description: this.props.currentPost.body,
-            isFirstTime:false
-          })
-
-      }
 
     var submitTitle = this.props.isModalOpen ? 'Update':'Submit'
 
 		return (
 			<div>
-			<Modal trigger={<Button onClick={this.openModal} className="Button-Bottom" circular={true} secondary>+</Button>} open={shouldOpenModal}>
+			<Modal trigger={<Button onClick={this.openModal} className="Button-Bottom" circular={true} secondary>+</Button>} open={open}>
 				<Modal.Header>Create a Post</Modal.Header>
 				<Modal.Content>
 		 		  <Modal.Description>
@@ -109,19 +100,19 @@ export class CreatePost extends Component {
 						<Form className="Div-Margin" onSubmit={this.handleSubmit}>
 							 <Form.Field>
      							 <label>Category</label>
-		   		    			 <Dropdown placeholder='Select a Category' fluid selection options={options} onChange={this.handleChangeDropdown} defaultValue={cat}/>
+		   		    			 <Dropdown placeholder='Select a Category' fluid selection options={options} onChange={this.handleChangeDropdown} defaultValue={category}/>
    							 </Form.Field>
    							 <Form.Field>
       							 <label>Author</label>
-     							 <input placeholder='Author' name='author' onChange={this.handleChange} value={auth} required/>
+     							 <input placeholder='Author' name='author' onChange={this.handleChange} value={author} required/>
    							 </Form.Field>
    							 <Form.Field>
       							 <label>Post Title</label>
-      							 <input placeholder='Post Title' name="title" onChange={this.handleChange} value={postTitle} required/>
+      							 <input placeholder='Post Title' name="title" onChange={this.handleChange} value={title} required/>
     						</Form.Field>
     						<Form.Field>
       							 <label>Post Description</label>
-      							 <TextArea placeholder='Write Something...' name="description" onChange={this.handleChange} value={postDescription} required/>
+      							 <TextArea placeholder='Write Something...' name="description" onChange={this.handleChange} value={description} required/>
     						</Form.Field>
     						<Button type='submit' primary>{submitTitle}</Button>
     						<Button onClick={this.closeModal} secondary>Close</Button>
