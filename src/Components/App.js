@@ -139,7 +139,7 @@ class App extends Component {
           <Route exact path='/' render={() => (
              <div>
                 <h1>Readable</h1>
-                <Select placeholder='Select Filter' options={filterOptions} onChange={this.handleChangeDropdown} defaultValue={this.state.sortedBy}/>
+                <Select placeholder='Sort by' options={filterOptions} onChange={this.handleChangeDropdown} defaultValue={this.state.sortedBy}/>
                 <Tab panes={panes} />
                 <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={this.state.post}/>
              </div>
