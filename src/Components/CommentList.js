@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import { Button, Comment, Form, Header } from 'semantic-ui-react'
 import * as API from '../api'
 import {CommentVote} from './CommentVote'
+import {UpdateComment} from './UpdateComment'
 
 class CommentList extends Component {
 
 
   state = {
     comments:[],
-    createCommentText:''
+    createCommentText:'',
+    isModalOpen:false,
+    selectedComment:null
   }
 
   componentDidMount() {
@@ -64,9 +67,24 @@ class CommentList extends Component {
       })
   }
 
+
+  editAction = (comment) => {
+
+      this.setState({
+        isModalOpen:true,
+        selectedComment:comment
+      })
+  }
+
+  modalClosed = () => {
+     this.setState({
+        isModalOpen:false,
+        selectedComment:null
+      })
+  }
+
 	render() {
 
-    const {post} = this.props
     const {comments,createCommentText} = this.state
 
 		return (
@@ -89,7 +107,7 @@ class CommentList extends Component {
                            </Comment.Metadata>
                            <Comment.Text>{comment.body}</Comment.Text>
                            <Comment.Actions>
-                           <Comment.Action>Edit</Comment.Action>
+                           <Comment.Action onClick={() => this.editAction(comment)}>Edit</Comment.Action>
                              <Comment.Action onClick={() => this.deleteComment(comment)}>Delete</Comment.Action>
                            </Comment.Actions>
                       </Comment.Content>
@@ -105,6 +123,10 @@ class CommentList extends Component {
     					<Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={this.submitComment}/>
    					</Form>
   				</Comment.Group>
+
+          {this.state.isModalOpen &&
+          <UpdateComment isModalOpen={this.state.isModalOpen} selectedComment={this.state.selectedComment} modalClosed={this.modalClosed} updateComment={this.updateComment}/>
+        }
 			</div>
 		);
 	}

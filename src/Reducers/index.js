@@ -15,7 +15,7 @@ function posts(state=[], action) {
 		case CREATE_POST:
 			return [action,...state]
 		case DELETE_POST:
-			return state.filter(post => post.id != action.id)
+			return state.filter(post => post.id !== action.id)
 		case UPDATE_POST:
 			var postIndex = state.map(x => x.id).indexOf(action.id)
 			var newState  = [...state]

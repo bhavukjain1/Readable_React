@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import '../App.css';
 import * as API from '../api'
 import { connect } from 'react-redux'
-import { Route } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
 import { updatePost } from '../Actions'
 
@@ -39,9 +38,9 @@ function mapDispatchToProps (dispatch) {
 
 
 
-export default connect(
+export default withRouter(connect(
 	null,
   	mapDispatchToProps
-)(PostVote)
+)(PostVote))
 
 
