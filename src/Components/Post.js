@@ -38,6 +38,7 @@ class Post extends Component {
                   <Item.Header as='a'>{post.title}</Item.Header>
                   <Item.Meta>
                       <span className='cinema'>{post.author}</span>
+                      <span className='cinema'> - {getDate(post.timestamp)}</span>
                   </Item.Meta>
                   <Item.Extra>
                       <Link to={`/post/${post.id}`} params={post}>
@@ -63,6 +64,12 @@ function mapDispatchToProps (dispatch) {
   return {
     deletePost: (data) => dispatch(deletePost(data))
       }
+}
+
+function getDate(timestamp) {
+  var d = new Date(timestamp)
+  var readableDate = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear()
+  return readableDate
 }
 
 export default withRouter(connect(

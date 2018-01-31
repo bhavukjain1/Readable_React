@@ -9,13 +9,15 @@ import { Route } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
 import * as API from '../api'
 import { updateCategories, createPost } from '../Actions'
+import { Select } from 'semantic-ui-react'
 
 class App extends Component {
 
 
   state = {
     isModalOpen:false,
-    post:null
+    post:null,
+    sortedBy:null
   }
 
   componentDidMount() {
@@ -47,6 +49,10 @@ class App extends Component {
        )
    }
 
+   handleChangeDropdown = (e,data) => {
+    this.setState({ sortedBy: data.value })
+  }
+
 
    postEditAction = (post) => {
       this.setState({
@@ -62,19 +68,68 @@ class App extends Component {
       })
    }
 
+   sortByVotes = (first,second) => {
+        if (first.voteScore == second.voteScore) {
+          return 0
+        }else if (first.voteScore > second.voteScore) {
+          return -1
+        }else {
+          return 1
+        }
+   }
+
+   sortByVotes = (first,second) => {
+        if (first.voteScore == second.voteScore) {
+          return 0
+        }else if (first.voteScore > second.voteScore) {
+          return -1
+        }else {
+          return 1
+        }
+   }
+
+   sortByTimestamp = (first,second) => {
+        if (first.timestamp == second.timestamp) {
+          return 0
+        }else if (first.timestamp > second.timestamp) {
+          return -1
+        }else {
+          return 1
+        }
+   }
+
 
   render() {
     const { posts, categories } = this.props
+
+    var newPosts
+    switch (this.state.sortedBy) {
+      case 'voteScore':
+        newPosts = posts.sort(this.sortByVotes)
+        break
+      case 'timestamp':
+        newPosts = posts.sort(this.sortByTimestamp)
+        break
+      default:
+        newPosts = posts
+    }
+
     var panes = []
 
-    var newItem = { menuItem: 'All', render: () => <Tab.Pane><Post posts={posts} isModelOpen={this.state.isModalOpen} postEditAction={this.postEditAction}/></Tab.Pane> }
+    var newItem = { menuItem: 'All', render: () => <Tab.Pane><Post posts={newPosts} isModelOpen={this.state.isModalOpen} postEditAction={this.postEditAction}/></Tab.Pane> }
     panes.push(newItem)
 
     for (var i = 0; i < categories.length; i++) {
-      let filteredPosts = posts.filter(post => post.category === categories[i].name)
+      let filteredPosts = newPosts.filter(post => post.category === categories[i].name)
       let pane = { menuItem: categories[i].name, render: () => <Tab.Pane><Post posts={filteredPosts} isModelOpen={this.state.isModalOpen} postEditAction={this.postEditAction}/></Tab.Pane> }
       panes.push(pane)
     }
+
+    var filterOptions = []
+    let filter1 = {text:'Vote Score',value:'voteScore'}
+    let filter2 = {text:'Timestamp',value:'timestamp'}
+    filterOptions.push(filter1)
+    filterOptions.push(filter2)
 
     return (
       <div className="App">
@@ -84,6 +139,7 @@ class App extends Component {
           <Route exact path='/' render={() => (
              <div>
                 <h1>Readable</h1>
+                <Select placeholder='Select Filter' options={filterOptions} onChange={this.handleChangeDropdown} defaultValue={this.state.sortedBy}/>
                 <Tab panes={panes} />
                 <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={this.state.post}/>
              </div>
