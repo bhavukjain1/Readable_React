@@ -13,7 +13,11 @@ function posts(state=[], action) {
 
 	switch(action.type) {
 		case CREATE_POST:
-			return [action,...state]
+			if ((state.filter(post => post.id === action.id)).length === 0) {
+				return [action,...state]
+			}else {
+				return state
+			}
 		case DELETE_POST:
 			return state.filter(post => post.id !== action.id)
 		case UPDATE_POST:
@@ -21,7 +25,6 @@ function posts(state=[], action) {
 			var newState  = [...state]
 			newState[postIndex] = action
 			return newState
-
 		default:
 			return state
 	}

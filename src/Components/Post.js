@@ -16,33 +16,22 @@ class Post extends Component {
    		posts: PropTypes.array.isRequired
    	}
 
-
-
   deletePost = (post) => {
-
-
     API.deletePost(post.id).then(post => {
         this.props.deletePost(post)
     })
-
   }
 
   editPost = (post) => {
-
     this.props.postEditAction(post)
   }
 
 	render() {
-
 		const {posts} = this.props
 		return (
 			<div className="Post-Content">
-
           <Item.Group divided>
-
           {posts.map(post => (
-
-
             <Item key={post.id}>
                   <PostVote post={post}/>
                   <Item.Content>
@@ -59,15 +48,12 @@ class Post extends Component {
                       </Link>
                       <Button floated='right' onClick={() => this.editPost(post)}>Edit</Button>
                       <Button floated='right' onClick={() => this.deletePost(post)}>Delete</Button>
-
                       <Label>{post.category}</Label>
-
                   </Item.Extra>
                   </Item.Content>
               </Item>
             ))}
           </Item.Group>
-
 			</div>
 		)
 	}

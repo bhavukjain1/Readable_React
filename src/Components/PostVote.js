@@ -8,14 +8,12 @@ import { updatePost } from '../Actions'
 class PostVote extends Component {
 
 	onButtonAction(vote) {
-		console.log(this.props.post.id)
 		API.updateVote(this.props.post.id,vote).then(post => {
 			this.props.updatePost(post)
 		})
 	}
 
 	render() {
-
 		const {post} = this.props
 		return (
 			<div className='Post-Vote' id='Post-Vote'>

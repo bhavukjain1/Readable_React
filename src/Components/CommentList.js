@@ -15,7 +15,6 @@ class CommentList extends Component {
   }
 
   componentDidMount() {
-
       API.getComments(this.props.post.id).then(comments => {
           this.setState({
             comments:comments.filter(comment => comment.deleted === false)
@@ -24,9 +23,7 @@ class CommentList extends Component {
   }
 
   updateComment = (comment) => {
-
       var commentIndex = this.state.comments.map(x => x.id).indexOf(comment.id)
-
       var newComments = this.state.comments
       newComments[commentIndex] = comment
       this.setState({
@@ -36,7 +33,6 @@ class CommentList extends Component {
 
   deleteComment = (comment) => {
     API.deleteComment(comment.id).then(() => {
-
         comment.deleted = true
         this.setState({
           comments:this.state.comments.filter(comment => comment.deleted === false)
@@ -46,17 +42,15 @@ class CommentList extends Component {
   }
 
   handleChange = (e) => {
-
     this.setState({
       createCommentText:e.target.value
     })
   }
 
   submitComment = () => {
-
       const {createCommentText} = this.state
-      console.log(createCommentText)
-      var comment = {id:makeid(),timestamp:Date.now(),body:this.state.createCommentText,author:'Bhavuk',parentId:this.props.post.id}
+
+      var comment = {id:makeid(),timestamp:Date.now(),body:createCommentText,author:'Bhavuk',parentId:this.props.post.id}
       API.createComment(comment).then(comment => {
         var newComments = this.state.comments
         newComments.push(comment)
@@ -69,7 +63,6 @@ class CommentList extends Component {
 
 
   editAction = (comment) => {
-
       this.setState({
         isModalOpen:true,
         selectedComment:comment
@@ -92,31 +85,28 @@ class CommentList extends Component {
 				<Comment.Group>
    					 <Header as='h3' dividing>Comments ({comments.length})</Header>
 
-            {comments.map(comment => (
-
-                  <Comment key={comment.id}>
-                  <div id='row1'>
-                    <div id="column1">
-                      <CommentVote comment={comment} updateComment={this.updateComment}/>
-                    </div>
-                    <div id="column1">
-                        <Comment.Content>
-                           <Comment.Author as='a'>{comment.author}</Comment.Author>
-                           <Comment.Metadata>
-                              <div>{getDate(comment.timestamp)}</div>
-                           </Comment.Metadata>
-                           <Comment.Text>{comment.body}</Comment.Text>
-                           <Comment.Actions>
-                           <Comment.Action onClick={() => this.editAction(comment)}>Edit</Comment.Action>
-                             <Comment.Action onClick={() => this.deleteComment(comment)}>Delete</Comment.Action>
-                           </Comment.Actions>
-                      </Comment.Content>
-                   </div>
+             {comments.map(comment => (
+              <Comment key={comment.id}>
+                <div id='row1'>
+                  <div id="column1">
+                    <CommentVote comment={comment} updateComment={this.updateComment}/>
                   </div>
-                 </Comment>
-
-              ))}
-
+                  <div id="column1">
+                    <Comment.Content>
+                       <Comment.Author as='a'>{comment.author}</Comment.Author>
+                       <Comment.Metadata>
+                          <div>{getDate(comment.timestamp)}</div>
+                       </Comment.Metadata>
+                       <Comment.Text>{comment.body}</Comment.Text>
+                       <Comment.Actions>
+                         <Comment.Action onClick={() => this.editAction(comment)}>Edit</Comment.Action>
+                         <Comment.Action onClick={() => this.deleteComment(comment)}>Delete</Comment.Action>
+                       </Comment.Actions>
+                    </Comment.Content>
+                  </div>
+                </div>
+              </Comment>
+            ))}
 
     				<Form reply>
       					<Form.TextArea required onChange={this.handleChange} value={createCommentText}/>
@@ -136,15 +126,12 @@ class CommentList extends Component {
 function makeid() {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
       for (var i = 0; i < 10; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
-
       return text;
 }
 
 function getDate(timestamp) {
-
   var d = new Date(timestamp)
   var readableDate = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear()
   return readableDate

@@ -19,28 +19,23 @@ class App extends Component {
   }
 
   componentDidMount() {
-
     const {updateCategories,updatePosts} = this.props
-     API.getCategories().then(categories => {
 
+     API.getCategories().then(categories => {
           for (var i = 0; i < categories.length; i++) {
             updateCategories(categories[i])
           }
      })
 
      API.getPosts().then(posts => {
-
           for (var i = 0; i < posts.length; i++) {
             updatePosts(posts[i])
           }
      })
-
   }
 
 
    post = (data) => {
-
-      console.log(data.match)
       var postId = data.match.params.postId
       var post = this.props.posts.filter(post => post.id === postId)[0]
       return (
@@ -54,7 +49,6 @@ class App extends Component {
 
 
    postEditAction = (post) => {
-
       this.setState({
         isModalOpen:true,
         post:post
@@ -77,7 +71,6 @@ class App extends Component {
     panes.push(newItem)
 
     for (var i = 0; i < categories.length; i++) {
-
       let filteredPosts = posts.filter(post => post.category === categories[i].name)
       let pane = { menuItem: categories[i].name, render: () => <Tab.Pane><Post posts={filteredPosts} isModelOpen={this.state.isModalOpen} postEditAction={this.postEditAction}/></Tab.Pane> }
       panes.push(pane)
@@ -87,21 +80,18 @@ class App extends Component {
       <div className="App">
 
       {categories.length > 0 &&
-
         <div>
-            <Route exact path='/' render={() => (
-                 <div>
-                    <h1>Readable</h1>
-                    <Tab panes={panes} />
-                    <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={this.state.post}/>
-                 </div>
-              )}
-            />
-
-            <Route path="/post/:postId" component={this.post}/>
+          <Route exact path='/' render={() => (
+             <div>
+                <h1>Readable</h1>
+                <Tab panes={panes} />
+                <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={this.state.post}/>
+             </div>
+            )}
+          />
+          <Route path="/post/:postId" component={this.post}/>
         </div>
       }
-
       </div>
     );
   }
