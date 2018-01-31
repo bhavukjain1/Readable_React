@@ -18,7 +18,7 @@ export function createPost({id,title,body,author,category,voteScore,commentCount
 }
 
 
-export function updatePost({id,title,body,author,category,voteScore,commentCount}) {
+export function updatePost({id,title,body,author,category,voteScore,commentCount,timestamp}) {
 	return {
 		type: UPDATE_POST,
 		id,
@@ -27,7 +27,8 @@ export function updatePost({id,title,body,author,category,voteScore,commentCount
 		author,
 		category,
 		voteScore,
-		commentCount
+		commentCount,
+		timestamp
 	}
 }
 
