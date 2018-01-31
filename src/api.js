@@ -127,6 +127,10 @@ export const updateComment = (commentId,comment) =>
     .then(data => data)
 
 
+export const getPostFromId = (postId) =>
+  fetch(`${api}/posts/${postId}`, { headers })
+    .then(res => res.json())
+    .then(data => data)
 
 
 // export const getAllPosts = () =>

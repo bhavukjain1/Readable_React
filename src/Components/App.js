@@ -40,6 +40,7 @@ class App extends Component {
 
    post = (data) => {
 
+      console.log(data.match)
       var postId = data.match.params.postId
       var post = this.props.posts.filter(post => post.id === postId)[0]
       return (
@@ -87,17 +88,19 @@ class App extends Component {
 
       {categories.length > 0 &&
 
-        <Route exact path='/' render={() => (
-             <div>
-                <h1>Readable</h1>
-                <Tab panes={panes} />
-                <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={this.state.post}/>
-             </div>
-          )}
-        />
-      }
+        <div>
+            <Route exact path='/' render={() => (
+                 <div>
+                    <h1>Readable</h1>
+                    <Tab panes={panes} />
+                    <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={this.state.post}/>
+                 </div>
+              )}
+            />
 
-        <Route path="/post/:postId" component={this.post}/>
+            <Route path="/post/:postId" component={this.post}/>
+        </div>
+      }
 
       </div>
     );

@@ -75,8 +75,7 @@ export class CreatePost extends Component {
 
 	render() {
 
-      console.log(this.props.isModalOpen)
-  		const { open, title, description, author, category, isFirstTime } = this.state
+  		const { open, title, description, author, category } = this.state
       const {categories, isModalOpen} = this.props
 
       var options = []
@@ -88,7 +87,7 @@ export class CreatePost extends Component {
 
 
 
-    var submitTitle = this.props.isModalOpen ? 'Update':'Submit'
+    var submitTitle = isModalOpen ? 'Update':'Submit'
 
 		return (
 			<div>
