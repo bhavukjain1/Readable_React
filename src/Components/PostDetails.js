@@ -52,7 +52,9 @@ class PostDetails extends Component {
         var newPosts = posts.filter(post => post.id === this.props.match.params.postId)
 		return (
 			<div className='Post-Detail'>
-
+            <div>
+            <Header/>
+            </div>
                 {newPosts.length > 0 &&
                 <div>
     				<Item.Group>

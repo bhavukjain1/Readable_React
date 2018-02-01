@@ -10,8 +10,9 @@ import { withRouter } from 'react-router-dom'
 import * as API from '../api'
 import { updateCategories, createPost } from '../Actions'
 import { Select } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Link, Switch } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
+import Header from './Header'
 
 class App extends Component {
 
@@ -137,6 +138,7 @@ class App extends Component {
 
       {categories.length > 0 &&
         <div>
+          <Switch>
           <Route exact path='/' render={() => (
              <div>
                 <h1>Readable</h1>
@@ -146,7 +148,16 @@ class App extends Component {
              </div>
             )}
           />
-          <Route path="/:category/:postId" component={this.post}/>
+          <Route exact path="/:category/:postId" component={this.post}/>
+
+          <Route render={() => (
+             <div>
+                <Header/>
+                <h1 className='Post-Detail-Top'>404 Page not found</h1>
+             </div>
+            )}
+          />
+          </Switch>
         </div>
       }
       </div>
