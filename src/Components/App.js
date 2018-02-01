@@ -12,7 +12,7 @@ import { updateCategories, createPost } from '../Actions'
 import { Select } from 'semantic-ui-react'
 import { Link, Switch } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
-import Header from './Header'
+import PageNotFound from './PageNotFound'
 
 class App extends Component {
 
@@ -96,13 +96,24 @@ class App extends Component {
 
       const { categories } = this.props
 
-      // <Link to={`/${categories[data.activeIndex].path}`}></Link>
-      console.log(data)
+      if (data.activeIndex === 0) {
+        this.props.history.push("/");
+      }else {
+        this.props.history.push(`/${categories[data.activeIndex - 1].name}`);
+      }
    }
 
+   getLinkFromCategory = (data) => {
 
-  render() {
     const { posts, categories } = this.props
+
+    var categoryName = ''
+
+    if (data.match.path == '/') {
+        categoryName = 'all'
+    }else {
+      categoryName = data.match.params.category
+    }
 
     var newPosts
     switch (this.state.sortedBy) {
@@ -133,30 +144,49 @@ class App extends Component {
     filterOptions.push(filter1)
     filterOptions.push(filter2)
 
+
+    var index = categories.map(x => x.name).indexOf(categoryName)
+
+    if (categoryName == 'all') {
+      index = 0
+    }
+    if (index == -1) {
+
+        return (
+            <PageNotFound/>
+          )
+
+    }else {
+
+    if (categoryName == 'all') {
+      index = -1
+    }
+
+      return (
+         <div>
+            <h1>Readable</h1>
+            <Select placeholder='Sort by' options={filterOptions} onChange={this.handleChangeDropdown} defaultValue={this.state.sortedBy}/>
+            <Tab panes={panes} onTabChange={this.handleChange} activeIndex={index+1}/>
+            <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={this.state.post}/>
+         </div>
+        )
+    }
+   }
+
+  render() {
+
+    const { categories } = this.props
+
     return (
       <div className="App">
 
       {categories.length > 0 &&
         <div>
           <Switch>
-          <Route exact path='/' render={() => (
-             <div>
-                <h1>Readable</h1>
-                <Select placeholder='Sort by' options={filterOptions} onChange={this.handleChangeDropdown} defaultValue={this.state.sortedBy}/>
-                <Tab panes={panes} onTabChange={this.handleChange} />
-                <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={this.state.post}/>
-             </div>
-            )}
-          />
-          <Route exact path="/:category/:postId" component={this.post}/>
-
-          <Route render={() => (
-             <div>
-                <Header/>
-                <h1 className='Post-Detail-Top'>404 Page not found</h1>
-             </div>
-            )}
-          />
+            <Route path="/:category/:postId" component={this.post}/>
+            <Route exact path='/:category' component={this.getLinkFromCategory} />
+            <Route exact path='/' component={this.getLinkFromCategory} />
+            <Route component={PageNotFound}/>
           </Switch>
         </div>
       }

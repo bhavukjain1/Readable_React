@@ -38,7 +38,7 @@ class Post extends Component {
                   <Item.Header as='a'>{post.title}</Item.Header>
                   <Item.Meta>
                       <span className='cinema'>{post.author}</span>
-                      <span className='cinema'> - {getDate(post.timestamp)}</span>
+                      <span className='cinema'> - {getDate(post.timestamp)} - {post.commentCount} comments</span>
                   </Item.Meta>
                   <Item.Extra>
                       <Link to={`/${post.category}/${post.id}`} params={post}>
