@@ -8,7 +8,7 @@ import { Form, TextArea } from 'semantic-ui-react'
 import * as API from '../api'
 
 
-export class CreatePost extends Component {
+class CreatePost extends Component {
 
   state = { author: '', title: '', description: '', category: this.props.categories[0].name, open: this.props.isModalOpen}
 
@@ -20,7 +20,7 @@ export class CreatePost extends Component {
             author: newProps.currentPost.author,
             title: newProps.currentPost.title,
             description: newProps.currentPost.body,
-            open:true
+            open:newProps.isModalOpen
         })
     }
   }
@@ -30,7 +30,6 @@ export class CreatePost extends Component {
   }
 
   handleChangeDropdown = (e,data) => {
-    console.log(data)
   	this.setState({ category: data.value })
   }
 
@@ -77,11 +76,12 @@ export class CreatePost extends Component {
       }
 
     var submitTitle = isModalOpen ? 'Update':'Submit'
+    var popupTitle = isModalOpen ? 'Update Post':'Create a Post'
 
 		return (
 			<div>
   			<Modal trigger={<Button onClick={this.openModal} className="Button-Bottom" circular={true} secondary>+</Button>} open={open}>
-  				<Modal.Header>Create a Post</Modal.Header>
+  				<Modal.Header>{popupTitle}</Modal.Header>
   				<Modal.Content>
   		 		  <Modal.Description>
   		 		  	<div >

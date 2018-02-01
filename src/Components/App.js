@@ -10,6 +10,8 @@ import { withRouter } from 'react-router-dom'
 import * as API from '../api'
 import { updateCategories, createPost } from '../Actions'
 import { Select } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Menu } from 'semantic-ui-react'
 
 class App extends Component {
 
@@ -69,17 +71,7 @@ class App extends Component {
    }
 
    sortByVotes = (first,second) => {
-        if (first.voteScore == second.voteScore) {
-          return 0
-        }else if (first.voteScore > second.voteScore) {
-          return -1
-        }else {
-          return 1
-        }
-   }
-
-   sortByVotes = (first,second) => {
-        if (first.voteScore == second.voteScore) {
+        if (first.voteScore === second.voteScore) {
           return 0
         }else if (first.voteScore > second.voteScore) {
           return -1
@@ -89,13 +81,22 @@ class App extends Component {
    }
 
    sortByTimestamp = (first,second) => {
-        if (first.timestamp == second.timestamp) {
+        if (first.timestamp === second.timestamp) {
           return 0
         }else if (first.timestamp > second.timestamp) {
           return -1
         }else {
           return 1
         }
+   }
+
+
+   handleChange = (e, data) => {
+
+      const { categories } = this.props
+
+      // <Link to={`/${categories[data.activeIndex].path}`}></Link>
+      console.log(data)
    }
 
 
@@ -121,7 +122,7 @@ class App extends Component {
 
     for (var i = 0; i < categories.length; i++) {
       let filteredPosts = newPosts.filter(post => post.category === categories[i].name)
-      let pane = { menuItem: categories[i].name, render: () => <Tab.Pane><Post posts={filteredPosts} isModelOpen={this.state.isModalOpen} postEditAction={this.postEditAction}/></Tab.Pane> }
+      let pane = { menuItem: categories[i].name,  render: () => <Tab.Pane><Post posts={filteredPosts} isModelOpen={this.state.isModalOpen} postEditAction={this.postEditAction}/></Tab.Pane>}
       panes.push(pane)
     }
 
@@ -140,12 +141,12 @@ class App extends Component {
              <div>
                 <h1>Readable</h1>
                 <Select placeholder='Sort by' options={filterOptions} onChange={this.handleChangeDropdown} defaultValue={this.state.sortedBy}/>
-                <Tab panes={panes} />
+                <Tab panes={panes} onTabChange={this.handleChange} />
                 <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={this.state.post}/>
              </div>
             )}
           />
-          <Route path="/post/:postId" component={this.post}/>
+          <Route path="/:category/:postId" component={this.post}/>
         </div>
       }
       </div>

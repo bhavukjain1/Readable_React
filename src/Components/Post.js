@@ -41,14 +41,12 @@ class Post extends Component {
                       <span className='cinema'> - {getDate(post.timestamp)}</span>
                   </Item.Meta>
                   <Item.Extra>
-                      <Link to={`/post/${post.id}`} params={post}>
+                      <Link to={`/${post.category}/${post.id}`} params={post}>
                          <Button primary floated='right'>
                            Read More
                            <Icon name='right chevron' />
                          </Button>
                       </Link>
-                      <Button floated='right' onClick={() => this.editPost(post)}>Edit</Button>
-                      <Button floated='right' onClick={() => this.deletePost(post)}>Delete</Button>
                       <Label>{post.category}</Label>
                   </Item.Extra>
                   </Item.Content>

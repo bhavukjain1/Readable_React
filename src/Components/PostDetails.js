@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import '../App.css';
-import { Item } from 'semantic-ui-react'
+import { Item, Button } from 'semantic-ui-react'
 import CommentList from './CommentList'
 import PostVote from './PostVote'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { updateCategories, createPost} from '../Actions'
+import { updateCategories, createPost, deletePost} from '../Actions'
 import * as API from '../api'
+import CreatePost from './CreatePost'
+import Header from './Header'
 
 class PostDetails extends Component {
+
+
+  state = {
+    isModalOpen:false
+  }
 
     componentDidMount() {
         if (this.props.post == null) {
@@ -19,26 +26,53 @@ class PostDetails extends Component {
         }
     }
 
+
+
+  deletePost = (post) => {
+    API.deletePost(post.id).then(post => {
+        this.props.deletePost(post)
+    })
+  }
+
+
+  closeModal = () => {
+      this.setState({
+        isModalOpen:false
+      })
+   }
+
+  editPost = (post) => {
+    this.setState({
+        isModalOpen:true
+      })
+  }
+
 	render() {
-        const {posts} = this.props
+        const {posts,categories} = this.props
         var newPosts = posts.filter(post => post.id === this.props.match.params.postId)
 		return (
 			<div className='Post-Detail'>
+
                 {newPosts.length > 0 &&
                 <div>
     				<Item.Group>
         				<Item>
         					<PostVote post={newPosts[0]}/>
          					<Item.Content>
-         					   <Item.Header as='a'>{newPosts[0].title}</Item.Header>
-         					   <Item.Meta>
-              						<span className='cinema'>{newPosts[0].author}</span>
-            					</Item.Meta>
-           					   <Item.Meta>{newPosts[0].body}</Item.Meta>
-                            </Item.Content>
+       					   <Item.Header as='a'>{newPosts[0].title}</Item.Header>
+       					   <Item.Meta>
+            						<span className='cinema'>{newPosts[0].author}</span>
+          					</Item.Meta>
+         					  <Item.Meta>{newPosts[0].body}</Item.Meta>
+                    <Item.Extra>
+                      <Button floated='left' onClick={() => this.editPost(newPosts[0])}>Edit</Button>
+                      <Button floated='left' onClick={() => this.deletePost(newPosts[0])}>Delete</Button>
+                    </Item.Extra>
+                  </Item.Content>
                         </Item>
                     </Item.Group>
     				<CommentList post={newPosts[0]}/>
+            <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={newPosts[0]}/>
                 </div>
                 }
 			</div>
@@ -57,7 +91,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps (dispatch) {
   return {
     updateCategories: (data) => dispatch(updateCategories(data)),
-    updatePosts: (data) => dispatch(createPost(data))
+    updatePosts: (data) => dispatch(createPost(data)),
+    deletePost: (data) => dispatch(deletePost(data))
       }
 }
 
