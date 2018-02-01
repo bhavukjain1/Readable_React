@@ -22,12 +22,13 @@ class PostDetails extends Component {
         if (this.props.post == null) {
             var postId = this.props.match.params.postId
             API.getPostFromId(postId).then(post => {
-                if (post.error == null) {
-                this.props.updatePosts(post)
-              }else {
-                this.setState({
+                console.log(post)
+                if (post.error != null || post != {}) {
+                  this.setState({
                   gotError:true
                 })
+              }else {
+                this.props.updatePosts(post)
               }
             })
         }
@@ -38,6 +39,7 @@ class PostDetails extends Component {
   deletePost = (post) => {
     API.deletePost(post.id).then(post => {
         this.props.deletePost(post)
+        this.props.history.push("/")
     })
   }
 
