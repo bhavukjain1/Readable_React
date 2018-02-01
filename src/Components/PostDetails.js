@@ -14,14 +14,21 @@ class PostDetails extends Component {
 
 
   state = {
-    isModalOpen:false
+    isModalOpen:false,
+    gotError:false
   }
 
     componentDidMount() {
         if (this.props.post == null) {
             var postId = this.props.match.params.postId
             API.getPostFromId(postId).then(post => {
+                if (post.error == null) {
                 this.props.updatePosts(post)
+              }else {
+                this.setState({
+                  gotError:true
+                })
+              }
             })
         }
     }
@@ -77,6 +84,9 @@ class PostDetails extends Component {
             <CreatePost isModalOpen={this.state.isModalOpen} closeModal={this.closeModal} currentPost={newPosts[0]}/>
                 </div>
                 }
+              {this.state.gotError &&
+                  <h1 className='Post-Detail-Top'>404 Page not found</h1>
+              }
 			</div>
 		);
 	}
