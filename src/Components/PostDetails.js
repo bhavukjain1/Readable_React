@@ -23,7 +23,7 @@ class PostDetails extends Component {
             var postId = this.props.match.params.postId
             API.getPostFromId(postId).then(post => {
                 console.log(post)
-                if (post.error != null || post == {}) {
+                if (post.error != null || Object.keys(post).length === 0) {
                   this.setState({
                   gotError:true
                 })
