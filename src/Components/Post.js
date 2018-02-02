@@ -47,6 +47,9 @@ class Post extends Component {
                            <Icon name='right chevron' />
                          </Button>
                       </Link>
+                      <Button floated='right' onClick={() => this.editPost(post)}>Edit</Button>
+                      <Button floated='right' onClick={() => this.deletePost(post)}>Delete</Button>
+
                       <Label>{post.category}</Label>
                   </Item.Extra>
                   </Item.Content>
