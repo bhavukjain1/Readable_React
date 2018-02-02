@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+  import React, { Component } from 'react';
 import '../App.css';
 import { Item, Button } from 'semantic-ui-react'
 import CommentList from './CommentList'
@@ -23,7 +23,7 @@ class PostDetails extends Component {
             var postId = this.props.match.params.postId
             API.getPostFromId(postId).then(post => {
                 console.log(post)
-                if (post.error != null || post != {}) {
+                if (post.error != null || post == {}) {
                   this.setState({
                   gotError:true
                 })
